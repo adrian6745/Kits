@@ -4,7 +4,7 @@
   <groupId>com.dragonphase</groupId>
   <artifactId>Kits</artifactId>
   <packaging>jar</packaging>
-  <version>1.5.1</version>
+  <version>1.6</version>
   <name>Kits</name>
   <url>http://www.dragonphase.com</url>
 
@@ -12,8 +12,8 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <api.version>unknown</api.version>
     <junit.version>4.11</junit.version>
-    <minecraft.version>1.6.2</minecraft.version>
-    <minecraft_version>1_6_R2</minecraft_version>
+    <minecraft.version>1.7.2</minecraft.version>
+    <minecraft_version>1_7_R3</minecraft_version>
   </properties>
   
   <build>
@@ -54,7 +54,7 @@
     <dependency>
       <groupId>org.bukkit</groupId>
       <artifactId>craftbukkit</artifactId>
-      <version>1.6.2-R0.1-SNAPSHOT</version>
+      <version>1.7.2-R0.3-SNAPSHOT</version>
     </dependency>
   </dependencies>
   

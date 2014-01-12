@@ -10,7 +10,6 @@ import org.bukkit.metadata.FixedMetadataValue;
 
 import com.dragonphase.Kits.Kits;
 import com.dragonphase.Kits.Util.Message;
-import com.dragonphase.Kits.metrics.Metrics;
 
 public class KitCommandExecutor implements CommandExecutor{
 	
@@ -47,8 +46,6 @@ public class KitCommandExecutor implements CommandExecutor{
                         receiver.updateInventory();
                         receiver.sendMessage(Message.info("Kit " + arg + " spawned by Console."));
                         sender.sendMessage(Message.info("Kit " + arg + " spawned for " + receiver.getName() + "."));
-                        
-                        addKitMetric();
                     }else{
                         sender.sendMessage(Message.warning(args[1] + " is not online."));
                     }
@@ -258,8 +255,6 @@ public class KitCommandExecutor implements CommandExecutor{
 	                                player.sendMessage(Message.info("Kit " + arg + " spawned for " + receiver.getName() + "."));
 	                                
 	                                if (!receiver.hasPermission("kits.bypassdelay." + arg) && plugin.getDelay(plugin.getKitManager().getDelay(arg), 1) > 0) plugin.addDelayedPlayer(receiver);
-	                                
-	                                addKitMetric();
 	                        }else{
 	                            player.sendMessage(Message.warning("Kit " + arg + " does not exist."));
 	                        }
@@ -273,18 +268,6 @@ public class KitCommandExecutor implements CommandExecutor{
 	        }
 	    }
 		return false;
-	}
-	
-	public void addKitMetric(){
-		if (!plugin.getMetrics().isOptOut()){
-			plugin.getMetrics().createGraph("Number of Kits Spawned").addPlotter(new Metrics.Plotter("Kit Spawn") {
-				
-				@Override
-				public int getValue() {
-					return 1;
-				}
-			});
-		}
 	}
 	
 	/**

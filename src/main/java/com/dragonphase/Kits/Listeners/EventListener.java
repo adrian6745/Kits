@@ -2,6 +2,7 @@ package com.dragonphase.Kits.Listeners;
 
 import com.dragonphase.Kits.Kits;
 import com.dragonphase.Kits.Util.Message;
+
 import java.util.logging.Logger;
 
 import org.bukkit.Material;
@@ -69,24 +70,25 @@ public class EventListener implements Listener
         }
     }
 
-    @EventHandler
+    @SuppressWarnings("deprecation")
+	@EventHandler
     public void onPlayerInteract(PlayerInteractEvent event)
     {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK && (event.getClickedBlock().getType() == Material.WALL_SIGN || event.getClickedBlock().getType() == Material.SIGN_POST)){
-            handleSignClick(event.getPlayer(), (Sign)event.getClickedBlock().getState());
-
-            event.setUseItemInHand(Result.DENY);
-            event.setUseInteractedBlock(Result.DENY);
+            if (handleSignClick(event.getPlayer(), (Sign)event.getClickedBlock().getState())){
+                event.setUseItemInHand(Result.DENY);
+                event.setUseInteractedBlock(Result.DENY);
+            }
         }else if (event.getAction() == Action.RIGHT_CLICK_AIR && (event.getPlayer().getTargetBlock(null, 5).getType() == Material.WALL_SIGN || event.getPlayer().getTargetBlock(null, 5).getType() == Material.SIGN_POST)){
-            handleSignClick(event.getPlayer(), (Sign)event.getPlayer().getTargetBlock(null,  5).getState());
-
-            event.setUseItemInHand(Result.DENY);
-            event.setUseInteractedBlock(Result.DENY);
+            if (handleSignClick(event.getPlayer(), (Sign)event.getPlayer().getTargetBlock(null,  5).getState())){
+                event.setUseItemInHand(Result.DENY);
+                event.setUseInteractedBlock(Result.DENY);
+            }
         }
     }
     
     @SuppressWarnings("deprecation")
-    public void handleSignClick(Player player, Sign sign){
+    public boolean handleSignClick(Player player, Sign sign){
         for (int i = 0; i < 4; i++){
             if (sign.getLines()[i].equalsIgnoreCase("[kit]") && i != 3){
                 try{
@@ -99,7 +101,7 @@ public class EventListener implements Listener
                                 int remaining = plugin.getRemainingTime(plugin.getKitManager().getDelay(arg), player);
                                 String seconds = remaining == 1 ? " second" : " seconds";
                                 player.sendMessage(Message.warning("You must wait " + remaining + seconds + " before spawning another kit."));
-                                return;
+                                return true;
                             }
                         }
                         if (plugin.getKitManager().exists(arg)){
@@ -125,14 +127,19 @@ public class EventListener implements Listener
                         else{
                             player.sendMessage(Message.warning("Kit " + arg + " does not exist."));
                         }
+                        return true; //Player has permission to spawn the kit
                     }
                     else{
                         player.sendMessage(Message.warning("Incorrect Permissions."));
+                        return false; //Player does not have permission to spawn the kit
                     }
                 }catch (Exception ex){
                     continue;
                 }
+            }else{
+            	continue;
             }
         }
+		return false; //If this line is reached, the sign is not a kit sign and it won't cancel any sign events.
     }
 }
